@@ -51,7 +51,6 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
         '       <tpl if="isCoveredCell === true">',
         '           <table:covered-table-cell ' +
         '               table:number-columns-repeated="{numberColumnsRepeated}"/>',
-        // '       </tpl>',
         '       <tpl else>',
         '           <table:table-cell ',
         '               table:number-columns-spanned="{numberColumnsSpanned}"',
@@ -62,7 +61,6 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
         '           </table:table-cell>',
         '       </tpl>',
         '   </tpl>',
-        //'   <table:table-cell table:number-columns-repeated="{numberColumnsRepeated}"/>',
         '</table:table-row>'
     ],
 
@@ -222,8 +220,6 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
 
         var me = this,
             bodyRowsTemplate = me.getBodyRowsTemplate(bodyColumns, records);
-            //numberColumnsRepeated = me.getRemainingColumns(bodyColumns.length),
-            //bodyRowsTemplate = new Ext.XTemplate(bodyRowsTemplateString);
 
         return bodyRowsTemplate.apply(records);
     },
@@ -238,7 +234,8 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
                   '     <table:table-row>';
         columns.forEach(function (column) {
             tpl += '        <table:table-cell ' +
-                   '    <tpl if="data.' + column.dataIndex + ' === \'\' || data.' + column.dataIndex + ' === null || data.' + column.dataIndex + ' === undefined "' +
+                   '            table:style-name="{[this.getTableStyleName("' + column.officeValueType + '")]}"' +
+                   '    <tpl if="data.' + column.dataIndex + ' === \'\' || data.' + column.dataIndex + ' === null || data.' + column.dataIndex + ' === undefined " >' +
                    '            />' +
                    '    <tpl else>';
 
@@ -247,16 +244,13 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
                 tpl += '        {[this.getOfficeValueAttribute("' + column.officeValueType + '")]}="{[this.getOfficeValue(values.get("' + column.dataIndex + '"), "' + column.officeValueType + '")]}"';
             }
 
-            tpl += '            table:style-name="{[this.getTableStyleName("' + column.officeValueType + '")]}"' +
-                   '            office:value-type="' + column.officeValueType + '">' +
+            tpl += '            office:value-type="' + column.officeValueType + '">' +
                    '            <text:p>{[this.getValue(values.get("' + column.dataIndex + '"), "' + column.officeValueType + '")]}</text:p>' +
                    '        </table:table-cell>' +
                    '    </tpl>';
         });
         tpl += '        </table:table-row>' +
-                        //repeatedCells +
-               '</tpl>'/* +
-               repeatedRows*/;
+               '</tpl>';
         return new Ext.XTemplate(tpl, tplConfig);
     },
 
