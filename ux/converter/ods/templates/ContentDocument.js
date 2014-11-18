@@ -292,7 +292,7 @@ Ext.define('Ext.ux.converter.ods.templates.ContentDocument', {
                         }
                         return value;
                     default:
-                        return value;
+                        return Ext.htmlEncode(value);
                 }
             },
             getTableStyleName: function (valueType) {
